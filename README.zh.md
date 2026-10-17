@@ -60,7 +60,7 @@ bank.json       题库（50 题 / 7 天）
 
 ```bash
 python check_bank.py    # 31/31  校验已交付题库
-python eval.py          # 6/6    另含重建比对与 LC_ALL=C
+python eval.py          # 37/37  31 条题库校验 + 重建比对 + 敌意 locale
 python demo.py          # 上面那张三种打法的表
 python build_bank.py    # 重新生成；需要同级目录存在 ../auditpilot
 ```

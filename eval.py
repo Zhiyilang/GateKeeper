@@ -21,6 +21,7 @@ avoid recursion.
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -58,10 +59,25 @@ def _run(args: list[str], env_extra: dict | None = None) -> tuple[int, str]:
 
 
 def main() -> int:
+    global PASS, FAIL
     print("== A. bank validation (always) ==", flush=True)
     rc, out = _run(["check_bank.py"])
     check("check_bank.exit0", rc == 0, f"rc={rc}\n{out[-800:]}")
     check("check_bank.all_pass", "0 failed" in out, "validator reported failures")
+    # Fold the validator's own count into this suite's total. Reporting "6/6"
+    # while check_bank.py really ran 31 assertions would understate what this
+    # suite verifies, and the published number has to match reality.
+    m = re.search(r"bank: (\d+)/(\d+) passed, (\d+) failed", out)
+    if m:
+        sub_pass, sub_total, sub_fail = int(m.group(1)), int(m.group(2)), int(m.group(3))
+        PASS += sub_pass
+        FAIL += sub_fail
+        print(f"  ..   + {sub_pass} bank assertions folded in from check_bank.py")
+        if sub_fail:
+            FAILURES.append(f"check_bank.py reported {sub_fail} failure(s)")
+    else:
+        FAIL += 1
+        FAILURES.append("could not read check_bank.py's assertion count")
 
     print("\n== B. rebuild from the live engine (needs ../auditpilot) ==", flush=True)
     if (_VENDOR / "auditpilot" / "agentguard.py").exists():

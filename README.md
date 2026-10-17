@@ -76,7 +76,7 @@ bank.json       the question bank (50 prompts, 7 days)
 
 ```bash
 python check_bank.py    # 31/31 - validates the shipped bank
-python eval.py          # 6/6   - + rebuild parity + LC_ALL=C
+python eval.py          # 37/37 - 31 bank checks + rebuild parity + LC_ALL=C
 python demo.py          # the three-policy table above
 python build_bank.py    # regenerate; needs ../auditpilot alongside
 ```
