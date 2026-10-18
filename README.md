@@ -66,19 +66,22 @@ cannot trigger them; the Chinese table now loads only when the text carries CJK.
 
 ```
 build_bank.py    regenerate bank.json by running the real engine
+build_html.py    regenerate the self-contained playable index.html
 check_bank.py   offline validator for the shipped bank (31 assertions)
-eval.py         suite: validate + rebuild-and-compare + hostile locale (6)
+eval.py         suite: validate + rebuild + HTML sync + hostile locale (43)
 demo.py         three simulated policies, non-interactive
 bank.json       the question bank (50 prompts, 7 days)
+index.html      playable single-file game (data inlined, open and play)
 ```
 
 ## Run it
 
 ```bash
 python check_bank.py    # 31/31 - validates the shipped bank
-python eval.py          # 37/37 - 31 bank checks + rebuild parity + LC_ALL=C
+python eval.py          # 43/43 - 31 bank + rebuild parity + HTML sync + LC_ALL=C
 python demo.py          # the three-policy table above
-python build_bank.py    # regenerate; needs ../auditpilot alongside
+python build_bank.py    # regenerate bank.json; needs ../auditpilot alongside
+python build_html.py    # regenerate index.html from bank.json (no deps)
 ```
 
 No dependencies, no network, no clock. Python 3.8+.
@@ -105,8 +108,11 @@ rather than silently.
 ## Status
 
 Submitted to 「松江·创世纪」2026 首届 AI 游戏创作创业大赛 (submission deadline
-2026-12-06, finals 2027-01-09). The bank, the scoring and the validator are
-done; the playable front end is the next milestone.
+2026-12-06, finals 2027-01-09). The bank, the scoring, the validator and the
+playable front end (`index.html`, open it in any browser) are all done. The
+HTML is regenerated from `bank.json` by `build_html.py`, and `eval.py` pins its
+embedded-question count and the three baseline scores (release -242 / obey 308 /
+perfect 454) so the demo can never silently lie about the engine.
 
 ## License
 

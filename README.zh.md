@@ -50,19 +50,22 @@
 
 ```
 build_bank.py    跑真实引擎重新生成 bank.json
+build_html.py    生成自包含可玩 index.html
 check_bank.py   题库离线校验器（31 条断言）
-eval.py         套件：校验 + 重建比对 + 敌意 locale（6 条）
+eval.py         套件：校验 + 重建比对 + HTML 同步 + 敌意 locale（43 条）
 demo.py         三种打法模拟，非交互
 bank.json       题库（50 题 / 7 天）
+index.html      可玩单页游戏（数据内联，浏览器直接打开）
 ```
 
 ## 运行
 
 ```bash
 python check_bank.py    # 31/31  校验已交付题库
-python eval.py          # 37/37  31 条题库校验 + 重建比对 + 敌意 locale
+python eval.py          # 43/43  31 条题库 + 重建比对 + HTML 同步 + 敌意 locale
 python demo.py          # 上面那张三种打法的表
 python build_bank.py    # 重新生成；需要同级目录存在 ../auditpilot
+python build_html.py    # 从 bank.json 重新生成 index.html（无依赖）
 ```
 
 零依赖、无网络、不读时钟。Python 3.8+。
@@ -77,7 +80,7 @@ python build_bank.py    # 重新生成；需要同级目录存在 ../auditpilot
 
 ## 状态
 
-投稿「松江·创世纪」2026 首届 AI 游戏创作创业大赛（投稿截止 2026-12-06，决赛 2027-01-09）。题库、计分、校验器已完成，可玩前端是下一个里程碑。
+投稿「松江·创世纪」2026 首届 AI 游戏创作创业大赛（投稿截止 2026-12-06，决赛 2027-01-09）。题库、计分、校验器、可玩前端（`index.html`，浏览器直接打开）均已就绪。`build_html.py` 从 `bank.json` 重新生成页面，`eval.py` 钉死了内联题目数与三个基准分（全放行 -242 / 盲从 308 / 自己 454），保证 Demo 永远不会在引擎分数上撒谎。
 
 ## 许可
 
