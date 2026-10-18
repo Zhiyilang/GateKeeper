@@ -65,23 +65,27 @@ cannot trigger them; the Chinese table now loads only when the text carries CJK.
 ## Layout
 
 ```
-build_bank.py    regenerate bank.json by running the real engine
-build_html.py    regenerate the self-contained playable index.html
-check_bank.py   offline validator for the shipped bank (31 assertions)
-eval.py         suite: validate + rebuild + HTML sync + hostile locale (43)
-demo.py         three simulated policies, non-interactive
-bank.json       the question bank (50 prompts, 7 days)
-index.html      playable single-file game (data inlined, open and play)
+build_bank.py       regenerate bank.json by running the real engine
+build_html.py       regenerate the self-contained playable index.html
+check_bank.py       offline validator for the shipped bank (31 assertions)
+check_submission.py offline validator for the submission copy (50 assertions)
+eval.py             suite: bank + rebuild parity + HTML sync + copy sync + hostile locale (95)
+demo.py             three simulated policies, non-interactive
+bank.json           the question bank (50 prompts, 7 days)
+index.html          playable single-file game (data inlined, open and play)
+SUBMISSION.en.md    paste-ready submission copy (English)
+SUBMISSION.zh.md    投稿文案（中文，可直接粘贴）
 ```
 
 ## Run it
 
 ```bash
-python check_bank.py    # 31/31 - validates the shipped bank
-python eval.py          # 43/43 - 31 bank + rebuild parity + HTML sync + LC_ALL=C
-python demo.py          # the three-policy table above
-python build_bank.py    # regenerate bank.json; needs ../auditpilot alongside
-python build_html.py    # regenerate index.html from bank.json (no deps)
+python check_bank.py         # 31/31  - validates the shipped bank
+python check_submission.py   # 50/50  - submission copy matches the bank
+python eval.py               # 95/95  - 31 bank + 50 copy + rebuild parity + HTML sync + LC_ALL=C
+python demo.py               # the three-policy table above
+python build_bank.py         # regenerate bank.json; needs ../auditpilot alongside
+python build_html.py         # regenerate index.html from bank.json (no deps)
 ```
 
 No dependencies, no network, no clock. Python 3.8+.

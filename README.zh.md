@@ -61,11 +61,12 @@ index.html      可玩单页游戏（数据内联，浏览器直接打开）
 ## 运行
 
 ```bash
-python check_bank.py    # 31/31  校验已交付题库
-python eval.py          # 43/43  31 条题库 + 重建比对 + HTML 同步 + 敌意 locale
-python demo.py          # 上面那张三种打法的表
-python build_bank.py    # 重新生成；需要同级目录存在 ../auditpilot
-python build_html.py    # 从 bank.json 重新生成 index.html（无依赖）
+python check_bank.py         # 31/31  校验已交付题库
+python check_submission.py   # 50/50  校验投稿文案与题库一致
+python eval.py               # 95/95  31 题库 + 50 文案 + 重建比对 + HTML 同步 + 敌意 locale
+python demo.py               # 上面那张三种打法的表
+python build_bank.py         # 重新生成；需要同级目录存在 ../auditpilot
+python build_html.py         # 从 bank.json 重新生成 index.html（无依赖）
 ```
 
 零依赖、无网络、不读时钟。Python 3.8+。
@@ -80,7 +81,7 @@ python build_html.py    # 从 bank.json 重新生成 index.html（无依赖）
 
 ## 状态
 
-投稿「松江·创世纪」2026 首届 AI 游戏创作创业大赛（投稿截止 2026-12-06，决赛 2027-01-09）。题库、计分、校验器、可玩前端（`index.html`，浏览器直接打开）均已就绪。`build_html.py` 从 `bank.json` 重新生成页面，`eval.py` 钉死了内联题目数与三个基准分（全放行 -242 / 盲从 308 / 自己 454），保证 Demo 永远不会在引擎分数上撒谎。
+投稿「松江·创世纪」2026 首届 AI 游戏创作创业大赛（投稿截止 2026-12-06，决赛 2027-01-09）。题库、计分、校验器、可玩前端（`index.html`，浏览器直接打开）、**投稿文案（`SUBMISSION.zh.md` / `SUBMISSION.en.md`，表单字段可直接粘贴）**均已就绪。`build_html.py` 从 `bank.json` 重新生成页面，`eval.py` 钉死了内联题目数、三个基准分（全放行 -242 / 盲从 308 / 自己 454）以及文案里全部量化表述，保证 Demo 和文案永远不会在题库或引擎分数上撒谎。
 
 ## 许可
 

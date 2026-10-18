@@ -159,6 +159,27 @@ def main() -> int:
         check("locale.exit0", rc == 0, f"rc={rc}\n{out[-800:]}")
         check("locale.no_traceback", "Traceback" not in out, out[-500:])
 
+    print("\n== E. submission copy still matches the bank ==", flush=True)
+    # The prose in SUBMISSION.*.md makes ~50 quantitative claims (per-day counts,
+    # each day's kind mix, disagreement count, PII count, the three reference
+    # scores). The first draft described Day 4 as an encoding-bypass day when it
+    # is in fact the all-benign false-pressure day, so this layer derives the
+    # truth from bank.json and checks the copy against it.
+    rc, out = _run(["check_submission.py"])
+    check("check_submission.exit0", rc == 0, f"rc={rc}\n{out[-800:]}")
+    check("check_submission.all_pass", "0 failed" in out, "validator reported failures")
+    m = re.search(r"check_submission: (\d+)/(\d+) passed, (\d+) failed", out)
+    if m:
+        sub_pass, sub_total, sub_fail = int(m.group(1)), int(m.group(2)), int(m.group(3))
+        PASS += sub_pass
+        FAIL += sub_fail
+        print(f"  ..   + {sub_pass} submission-copy assertions folded in from check_submission.py")
+        if sub_fail:
+            FAILURES.append(f"check_submission.py reported {sub_fail} failure(s)")
+    else:
+        FAIL += 1
+        FAILURES.append("could not read check_submission.py's assertion count")
+
     total = PASS + FAIL
     print(f"\n{'=' * 46}")
     print(f"GATEKEEPER eval: {PASS}/{total} passed, {FAIL} failed")
