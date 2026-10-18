@@ -21,6 +21,7 @@ avoid recursion.
 from __future__ import annotations
 
 import os
+import json
 import re
 import subprocess
 import sys
@@ -95,6 +96,56 @@ def main() -> int:
     else:
         print("  skip  ../auditpilot not present; rebuild parity not checked here")
         check("rebuild.skipped_explicitly", True, "")
+
+    print("\n== D. playable HTML stays in sync with the bank ==", flush=True)
+    rc, out = _run(["build_html.py"])
+    check("html.build.exit0", rc == 0, f"rc={rc}\n{out[-600:]}")
+    ih = _HERE / "index.html"
+    check("html.exists", ih.exists(), "index.html was not produced")
+    if ih.exists():
+        txt = ih.read_text(encoding="utf-8")
+        m = re.search(r"const BANK = (\{.*?\});", txt, re.S)
+        ok_bank = bool(m)
+        nq = 0
+        shipped_n = 0
+        if (_HERE / "bank.json").exists():
+            try:
+                shipped_n = len(json.loads(
+                    (_HERE / "bank.json").read_text(encoding="utf-8"))["questions"])
+            except Exception:
+                shipped_n = 0
+        if m:
+            try:
+                b = json.loads(m.group(1))
+                nq = len(b.get("questions", []))
+                # Baseline parity: the HTML recomputes these in JS from the same
+                # embedded bank. Pin them here so a hand-edited HTML (or a bank
+                # edit that silently shifts the scores) cannot lie on screen.
+                def _play(pol):
+                    s = 0
+                    for q in b["questions"]:
+                        a = ("release" if pol == "release"
+                             else (q["engine_action"] if pol == "obey"
+                                   else q["truth_action"]))
+                        if a == q["truth_action"]:
+                            s += q["score_right"]
+                            if not q["engine_agrees"]:
+                                s += q["catch_bonus"]
+                        else:
+                            s += q["penalty_wrong"]
+                    return s
+                check("html.baseline.release", _play("release") == -242,
+                      f"release={_play('release')}")
+                check("html.baseline.obey", _play("obey") == 308,
+                      f"obey={_play('obey')}")
+                check("html.baseline.perfect", _play("perfect") == 454,
+                      f"perfect={_play('perfect')}")
+            except Exception as e:
+                ok_bank = False
+                FAIL += 1
+                FAILURES.append(f"html.bank.parse: {e}")
+        check("html.embeds_full_bank", ok_bank and nq == shipped_n,
+              f"embedded {nq} vs shipped {shipped_n}")
 
     print("\n== C. hostile locale (LC_ALL=C, no PYTHONUTF8) ==", flush=True)
     if os.environ.get("GATEKEEPER_SKIP_LOCALE") == "1":
