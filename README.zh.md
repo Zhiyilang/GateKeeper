@@ -52,11 +52,27 @@
 build_bank.py    跑真实引擎重新生成 bank.json
 build_html.py    生成自包含可玩 index.html
 check_bank.py   题库离线校验器（31 条断言）
-eval.py         套件：校验 + 重建比对 + HTML 同步 + 敌意 locale（43 条）
+check_submission.py  投稿文案校验器（50 条断言）
+eval.py         套件：校验 + 重建比对 + HTML 同步 + 文案同步 + 敌意 locale（95 条）
 demo.py         三种打法模拟，非交互
+make_assets.py  由 bank.json 渲染封面与截图（需要 Pillow）
 bank.json       题库（50 题 / 7 天）
 index.html      可玩单页游戏（数据内联，浏览器直接打开）
+cover.png       投稿封面图 1600x900
+shot_*.png      四张截图 1280x800，用真实题库数据渲染
+SUBMISSION.zh.md   投稿文案（中文，可直接粘贴）
+SUBMISSION.en.md   English submission copy
+AI_USAGE_DECLARATION.md  平台必填的「AI 使用声明」
 ```
+
+## 试玩
+
+**https://zhiyilang.github.io/GateKeeper/index.html** —— 或者直接用浏览器打开本仓的
+`index.html`。不需要服务器、不需要联网、不需要安装。
+
+截图由 `make_assets.py` 从游戏内嵌的同一份 `bank.json` 渲染，配色直接取
+`index.html` 样式表里的设计变量——所以它们是**真实游戏界面**，不是对游戏的插画
+演绎。脚本在题库算分与文档宣称不一致时会拒绝产出任何图片。
 
 ## 运行
 
@@ -67,6 +83,7 @@ python eval.py               # 95/95  31 题库 + 50 文案 + 重建比对 + HTM
 python demo.py               # 上面那张三种打法的表
 python build_bank.py         # 重新生成；需要同级目录存在 ../auditpilot
 python build_html.py         # 从 bank.json 重新生成 index.html（无依赖）
+python make_assets.py        # 重新生成封面与截图（需要 Pillow）
 ```
 
 零依赖、无网络、不读时钟。Python 3.8+。

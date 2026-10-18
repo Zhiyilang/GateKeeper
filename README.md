@@ -71,11 +71,25 @@ check_bank.py       offline validator for the shipped bank (31 assertions)
 check_submission.py offline validator for the submission copy (50 assertions)
 eval.py             suite: bank + rebuild parity + HTML sync + copy sync + hostile locale (95)
 demo.py             three simulated policies, non-interactive
+make_assets.py      render cover.png + shot_*.png from bank.json (needs Pillow)
 bank.json           the question bank (50 prompts, 7 days)
 index.html          playable single-file game (data inlined, open and play)
+cover.png           submission banner, 1600x900
+shot_*.png          four screenshots, 1280x800, rendered from real bank data
 SUBMISSION.en.md    paste-ready submission copy (English)
 SUBMISSION.zh.md    投稿文案（中文，可直接粘贴）
+AI_USAGE_DECLARATION.md  the platform's mandatory AI-use statement
 ```
+
+## Play it
+
+**https://zhiyilang.github.io/GateKeeper/index.html** — or just open `index.html`
+from this repo in any browser. No server, no network, no install.
+
+The screenshots are rendered by `make_assets.py` from the same `bank.json` the game
+embeds, using the design tokens copied out of `index.html`'s stylesheet — so they
+show the real game, not an illustration of it. The script refuses to write any
+image if the bank no longer produces the published scores.
 
 ## Run it
 
@@ -86,6 +100,7 @@ python eval.py               # 95/95  - 31 bank + 50 copy + rebuild parity + HTM
 python demo.py               # the three-policy table above
 python build_bank.py         # regenerate bank.json; needs ../auditpilot alongside
 python build_html.py         # regenerate index.html from bank.json (no deps)
+python make_assets.py        # regenerate cover.png + shot_*.png (needs Pillow)
 ```
 
 No dependencies, no network, no clock. Python 3.8+.
